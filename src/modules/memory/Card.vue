@@ -1,7 +1,9 @@
 <template>
-  <div>
-    {{ value }}
-  </div>
+  <button @click="turnCard" :disabled="found">
+    <span v-if="open || found">
+      {{ value }}
+    </span>
+  </button>
 </template>
 
 <script lang="ts">
@@ -13,21 +15,42 @@ export default defineComponent({
       type: String,
       required: true
     },
-    color: {
-      type: String,
-      required: true
+    found: {
+      type: Boolean,
+      default: false
+    },
+    open: {
+      type: Boolean,
+      default: false
     }
+  },
+
+  setup(props, { emit }) {
+    return {
+      turnCard() {
+        emit("turn-card");
+      }
+    };
   }
 });
 </script>
 
 <style scoped lang="stylus">
-div
+button
   display flex
   justify-content center
   align-items center
 
+  cursor pointer
+  border none
+  outline none
+  border-radius 5px
+
   font-size 4em
+  user-select none
   color white
-  background-color black
+  background-color #111
+
+  &:hover
+    background-color #222
 </style>

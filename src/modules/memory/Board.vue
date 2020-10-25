@@ -2,19 +2,21 @@
   <div :style="cssVars">
     <div class="board">
       <Card
-        v-for="(card, index) in cards"
+        v-for="(value, index) in cards"
         :key="index"
-        :value="card"
-        color="black"
+        :value="value"
+        :found="foundPairs.includes(value)"
+        :open="openCards.includes(index)"
+        @turn-card="turnCard(index)"
       ></Card>
     </div>
-    <button @click="shuffleCards">Shuffle</button>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 import Card from "@/modules/memory/Card.vue";
+import { shuffleArray } from "@/shared/helpers/array";
 
 export default defineComponent({
   props: {
@@ -28,17 +30,40 @@ export default defineComponent({
     Card
   },
 
-  setup(props) {
-    const letters = getRandomLetters(props.pairs);
-    const cards = ref([...letters, ...letters]);
+  setup(props, { emit }) {
+    const values = getRandomEmojis(props.pairs);
+    const cards = ref([...values, ...values]);
     const shuffleCards = () => shuffleArray(cards.value);
+    shuffleCards();
 
     const gridColumns = Math.ceil(Math.sqrt(cards.value.length));
     const gridRows = Math.ceil(cards.value.length / gridColumns);
 
+    const openCards = ref<number[]>([]);
+    const foundPairs = ref<string[]>([]);
+
+    const turnCard = (turnedCard: number) => {
+      if (openCards.value.length === 2) {
+        openCards.value = [];
+      }
+      openCards.value.push(turnedCard);
+      if (openCards.value.length === 2) {
+        const allCards = cards.value;
+        if (allCards[openCards.value[0]] === allCards[openCards.value[1]]) {
+          foundPairs.value.push(allCards[openCards.value[0]]);
+        }
+      }
+      if (foundPairs.value.length === props.pairs) {
+        emit("done");
+      }
+    };
+
     return {
       cards,
+      openCards,
+      foundPairs,
       shuffleCards,
+      turnCard,
       cssVars: {
         "--grid-columns": gridColumns,
         "--grid-rows": gridRows
@@ -47,8 +72,10 @@ export default defineComponent({
   }
 });
 
-const getRandomLetters = (amount: number) => {
-  const options = Array.from("ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+const getRandomEmojis = (amount: number) => {
+  const options = Array.from(
+    "🤤😘😊😂😍😒😁👍😎😉🎉😜👀🤢🤔🤗😴🥱🤯🥵🥶🤓🙈🐶🐺🐱🦁🦊🦝🐨🦄🐽🦘🐫🐘🦥🦕🦖🐙🐳"
+  );
   const letters = [];
   for (let i = 0; i < amount; i++) {
     const index = Math.floor(Math.random() * options.length);
@@ -56,13 +83,6 @@ const getRandomLetters = (amount: number) => {
     options.splice(index, 1);
   }
   return letters;
-};
-
-const shuffleArray = (array: Array<unknown>) => {
-  for (let i = array.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [array[i], array[j]] = [array[j], array[i]];
-  }
 };
 </script>
 
