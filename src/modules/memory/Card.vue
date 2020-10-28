@@ -1,5 +1,5 @@
 <template>
-  <button @click="turnCard" :disabled="found">
+  <button @click="turnCard" :disabled="open || found">
     <span v-if="open || found">
       {{ value }}
     </span>
