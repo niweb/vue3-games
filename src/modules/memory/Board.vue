@@ -16,7 +16,8 @@
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 import Card from "@/modules/memory/Card.vue";
-import { shuffleArray } from "@/shared/helpers/array";
+import { getRandomIndex, shuffleArray } from "@/shared/helpers/array";
+import { emojis } from "@/shared/statics";
 
 export default defineComponent({
   props: {
@@ -73,12 +74,10 @@ export default defineComponent({
 });
 
 const getRandomEmojis = (amount: number) => {
-  const options = Array.from(
-    "🤤😘😊😂😍😒😁👍😎😉🎉😜👀🤢🤔🤗😴🥱🤯🥵🥶🤓🙈🐶🐺🐱🦁🦊🦝🐨🦄🐽🦘🐫🐘🦥🦕🦖🐙🐳"
-  );
+  const options = emojis;
   const letters = [];
   for (let i = 0; i < amount; i++) {
-    const index = Math.floor(Math.random() * options.length);
+    const index = getRandomIndex(options);
     letters.push(options[index]);
     options.splice(index, 1);
   }
