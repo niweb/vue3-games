@@ -5,13 +5,14 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, PropType } from "vue";
+import { SquareValue } from "@/modules/tic-tac-toe/types";
 
 export default defineComponent({
   props: {
     value: {
-      type: String,
-      required: true
+      type: String as PropType<SquareValue>,
+      default: null
     }
   },
 

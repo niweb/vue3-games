@@ -6,16 +6,15 @@
       :value="value"
       @mark-field="markField(index)"
     ></Square>
-    <h3 v-if="done">
-      DONE!
-    </h3>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from "vue";
+import { defineComponent, ref, watch } from "vue";
 import Square from "@/modules/tic-tac-toe/Square.vue";
-import { getRandomElement } from "@/shared/helpers/array";
+import { SquareValue } from "@/modules/tic-tac-toe/types";
+import { useGameOver } from "@/modules/tic-tac-toe/functions/gameOver";
+import { useComputerMove } from "@/modules/tic-tac-toe/functions/computerMove";
 
 export default defineComponent({
   components: {
@@ -23,30 +22,21 @@ export default defineComponent({
   },
 
   setup(props, { emit }) {
-    const squares = ref<Array<string | null>>(Array(9).fill(null));
-    const freeSquareIndexes = computed(() =>
-      squares.value
-        .map((value, index) => ({ value, index }))
-        .filter(item => item.value === null)
-        .map(item => item.index)
-    );
-    const done = computed(() => {
-      if (freeSquareIndexes.value.length < 1) {
-        emit("done");
-      }
-    });
+    const squares = ref<Array<SquareValue>>(Array(9).fill(null));
+    const { winner, gameOver } = useGameOver(squares);
+    const { computerMove } = useComputerMove(squares);
 
-    const computerMove = () => {
-      const index = getRandomElement(freeSquareIndexes.value);
-      squares.value[index] = "O";
-    };
+    watch(gameOver, () => {
+      emit("done", winner.value);
+    });
 
     return {
       squares,
-      done,
       markField(id: number) {
         squares.value[id] = "X";
-        computerMove();
+        if (!winner.value && !gameOver.value) {
+          squares.value[computerMove()] = "O";
+        }
       }
     };
   }
