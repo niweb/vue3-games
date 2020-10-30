@@ -2,7 +2,8 @@
   <nav>
     <router-link :to="paths.home">Home</router-link> -
     <router-link :to="paths.memory">Memory</router-link> -
-    <router-link :to="paths.ticTacToe">Tic Tac Toe</router-link>
+    <router-link :to="paths.ticTacToe">Tic Tac Toe</router-link> -
+    <router-link :to="paths.hangman">Hangman</router-link>
   </nav>
   <main>
     <router-view />

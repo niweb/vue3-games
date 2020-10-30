@@ -1,7 +1,8 @@
 <template>
   <h1>Hello! 👋</h1>
   Play <router-link :to="paths.memory">Memory</router-link> or
-  <router-link :to="paths.ticTacToe">Tic Tac Toe</router-link>
+  <router-link :to="paths.ticTacToe">Tic Tac Toe</router-link> or
+  <router-link :to="paths.hangman">Hangman</router-link>
 </template>
 
 <script lang="ts">
