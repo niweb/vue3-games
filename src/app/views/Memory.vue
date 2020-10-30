@@ -1,35 +1,27 @@
 <template>
-  <Overlay :open="done">
-    <template v-slot:overlay>
+  <Game :done="done" @new-game="done = false">
+    <template v-slot:done>
       <h3>🎉 DONE! 🎉</h3>
-      <button @click="newGame">New Game</button>
     </template>
-    <MemoryBoard :pairs="8" @done="done = true" :key="gameId"></MemoryBoard>
-    <button @click="newGame">New Game</button>
-  </Overlay>
+    <MemoryBoard :pairs="8" @done="done = true"></MemoryBoard>
+  </Game>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 import MemoryBoard from "@/modules/memory/Board.vue";
-import Overlay from "@/shared/components/Overlay.vue";
+import Game from "@/shared/components/Game.vue";
 
 export default defineComponent({
   components: {
     MemoryBoard,
-    Overlay
+    Game
   },
 
   setup() {
-    const gameId = ref(0);
     const done = ref(false);
     return {
-      done,
-      gameId,
-      newGame() {
-        gameId.value++;
-        done.value = false;
-      }
+      done
     };
   }
 });
