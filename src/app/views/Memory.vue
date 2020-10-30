@@ -1,21 +1,23 @@
 <template>
-  <div class="memory">
-    <div v-if="done" class="done">
+  <Overlay :open="done">
+    <template v-slot:overlay>
       <h3>🎉 DONE! 🎉</h3>
       <button @click="newGame">New Game</button>
-    </div>
+    </template>
     <MemoryBoard :pairs="8" @done="done = true" :key="gameId"></MemoryBoard>
     <button @click="newGame">New Game</button>
-  </div>
+  </Overlay>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 import MemoryBoard from "@/modules/memory/Board.vue";
+import Overlay from "@/shared/components/Overlay.vue";
 
 export default defineComponent({
   components: {
-    MemoryBoard
+    MemoryBoard,
+    Overlay
   },
 
   setup() {
@@ -32,15 +34,3 @@ export default defineComponent({
   }
 });
 </script>
-
-<style lang="stylus" scoped>
-.memory
-  position: relative
-
-.done
-  position absolute
-  width 100%
-  height 100%
-  background-color rgba(255,255,255,.85)
-  padding-top 50px
-</style>
