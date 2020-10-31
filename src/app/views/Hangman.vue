@@ -5,7 +5,6 @@
       <h3 v-else>You lost 😥</h3>
       <h4>The word was: {{ endStats.word }}</h4>
     </template>
-    ⚠ This is still WIP. Don't worry, it will be more exciting soon. :)
     <Hangman @done="onGameEnd"></Hangman>
   </Game>
 </template>

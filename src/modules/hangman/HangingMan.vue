@@ -1,9 +1,9 @@
 <template>
   <svg height="260" width="300">
     <line id="floor" x1="10" y1="250" x2="290" y2="250" />
-    <line v-if="step > 0" id="pfosten" x1="100" y1="250" x2="100" y2="20" />
-    <line v-if="step > 1" id="balken" x1="100" y1="20" x2="200" y2="20" />
-    <line v-if="step > 2" id="querstrebe" x1="100" y1="60" x2="150" y2="20" />
+    <line v-if="step > 0" id="pole" x1="100" y1="250" x2="100" y2="20" />
+    <line v-if="step > 1" id="beam" x1="100" y1="20" x2="200" y2="20" />
+    <line v-if="step > 2" id="joist" x1="100" y1="60" x2="150" y2="20" />
     <line v-if="step > 3" id="rope" x1="200" y1="20" x2="200" y2="60" />
     <g id="man">
       <g id="head" v-if="step > 4">
@@ -26,12 +26,14 @@
           <line x1="204" y1="84" x2="210" y2="78" />
         </g>
       </g>
-      <g id="torso" v-if="step > 5">
-        <line id="body" x1="200" y1="100" x2="200" y2="150" />
-        <line id="armL" x1="200" y1="120" x2="170" y2="140" />
-        <line id="armR" x1="200" y1="120" x2="230" y2="140" />
+      <g id="torso">
+        <line v-if="step > 5" id="body" x1="200" y1="100" x2="200" y2="150" />
+        <g id="arms" v-if="step > 6">
+          <line id="armL" x1="200" y1="120" x2="170" y2="140" />
+          <line id="armR" x1="200" y1="120" x2="230" y2="140" />
+        </g>
       </g>
-      <g id="legs" v-if="step > 6">
+      <g id="legs" v-if="step > 7">
         <line id="legL" x1="200" y1="150" x2="180" y2="190" />
         <line id="legR" x1="200" y1="150" x2="220" y2="190" />
       </g>

@@ -1,17 +1,19 @@
 <template>
-  <div class="board">
-    <div class="word">
-      <span v-for="(letter, index) in displayedWord" :key="index">
-        {{ letter ? letter : "_" }}
-      </span>
+  <LoadingOverlay :open="loading">
+    <div class="board">
+      <div class="word">
+        <span v-for="(letter, index) in displayedWord" :key="index">
+          {{ letter ? letter : "_" }}
+        </span>
+      </div>
+      <HangingMan class="man" :step="wrongGuesses.length"></HangingMan>
+      <LetterPicker
+        class="letter-picker"
+        :disabledLetters="chosenLetters"
+        @pick="chooseLetter"
+      ></LetterPicker>
     </div>
-    <HangingMan class="man" :step="chosenLetters.length"></HangingMan>
-    <LetterPicker
-      class="letter-picker"
-      :disabledLetters="chosenLetters"
-      @pick="chooseLetter"
-    ></LetterPicker>
-  </div>
+  </LoadingOverlay>
 </template>
 
 <script lang="ts">
@@ -19,18 +21,18 @@ import { defineComponent, ref, computed } from "vue";
 import LetterPicker from "@/modules/hangman/LetterPicker.vue";
 import HangingMan from "@/modules/hangman/HangingMan.vue";
 import { watchDeep } from "@/shared/helpers/vue";
+import { useRandomWord } from "@/modules/hangman/functions/useRandomWord";
+import LoadingOverlay from "@/shared/components/LoadingOverlay.vue";
 
 export default defineComponent({
   components: {
     HangingMan,
-    LetterPicker
+    LetterPicker,
+    LoadingOverlay
   },
 
   setup(props, { emit }) {
-    //todo get random word
-    //https://www.wordgenerator.net/application/p.php?type=1&id=nouns&spaceflag=false
-
-    const word = ref(Array.from("Foo".toUpperCase()));
+    const { word, loading } = useRandomWord();
     const chosenLetters = ref<string[]>([]);
 
     const announceGameEnd = won => {
@@ -52,13 +54,16 @@ export default defineComponent({
       return chosenLetters.value.filter(v => !word.value.includes(v));
     });
     watchDeep(wrongGuesses, () => {
+      console.log("wrongGuesses", wrongGuesses.value);
       if (wrongGuesses.value.length > 7) {
         announceGameEnd(false);
       }
     });
 
     return {
+      loading,
       chosenLetters,
+      wrongGuesses,
       displayedWord,
       chooseLetter(letter: string) {
         chosenLetters.value.push(letter);
