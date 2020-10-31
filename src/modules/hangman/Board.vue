@@ -5,7 +5,7 @@
         {{ letter ? letter : "_" }}
       </span>
     </div>
-    <HangingMan class="man"></HangingMan>
+    <HangingMan class="man" :step="chosenLetters.length"></HangingMan>
     <LetterPicker
       class="letter-picker"
       :disabledLetters="chosenLetters"
@@ -15,9 +15,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, watch } from "vue";
+import { defineComponent, ref, computed } from "vue";
 import LetterPicker from "@/modules/hangman/LetterPicker.vue";
 import HangingMan from "@/modules/hangman/HangingMan.vue";
+import { watchDeep } from "@/shared/helpers/vue";
 
 export default defineComponent({
   components: {
@@ -32,23 +33,29 @@ export default defineComponent({
     const word = ref(Array.from("Foo".toUpperCase()));
     const chosenLetters = ref<string[]>([]);
 
+    const announceGameEnd = won => {
+      emit("done", { won, word: word.value.reduce((acc, curr) => acc + curr) });
+    };
+
     const displayedWord = computed(() => {
       return word.value.map(letter =>
         chosenLetters.value.includes(letter) ? letter : null
       );
     });
-
-    watch(
-      displayedWord,
-      () => {
-        if (displayedWord.value.every(v => v !== null)) {
-          emit("done");
-        }
-      },
-      {
-        deep: true
+    watchDeep(displayedWord, () => {
+      if (displayedWord.value.every(v => v !== null)) {
+        announceGameEnd(true);
       }
-    );
+    });
+
+    const wrongGuesses = computed(() => {
+      return chosenLetters.value.filter(v => !word.value.includes(v));
+    });
+    watchDeep(wrongGuesses, () => {
+      if (wrongGuesses.value.length > 7) {
+        announceGameEnd(false);
+      }
+    });
 
     return {
       chosenLetters,

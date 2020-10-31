@@ -1,7 +1,12 @@
 <template>
   <svg height="260" width="300">
-    <g id="body">
-      <g id="head">
+    <line id="floor" x1="10" y1="250" x2="290" y2="250" />
+    <line v-if="step > 0" id="pfosten" x1="100" y1="250" x2="100" y2="20" />
+    <line v-if="step > 1" id="balken" x1="100" y1="20" x2="200" y2="20" />
+    <line v-if="step > 2" id="querstrebe" x1="100" y1="60" x2="150" y2="20" />
+    <line v-if="step > 3" id="rope" x1="200" y1="20" x2="200" y2="60" />
+    <g id="man">
+      <g id="head" v-if="step > 4">
         <circle
           cx="200"
           cy="80"
@@ -10,36 +15,41 @@
           stroke-width="4"
           fill="white"
         />
-        <g id="rEyes">
+        <g id="normal-eyes" v-if="step <= 7">
           <circle cx="193" cy="80" r="4" />
           <circle cx="207" cy="80" r="4" />
         </g>
-        <g id="xEyes" class="hide">
+        <g id="dead-eyes" v-if="step > 7">
           <line x1="190" y1="78" x2="196" y2="84" />
           <line x1="204" y1="78" x2="210" y2="84" />
           <line x1="190" y1="84" x2="196" y2="78" />
           <line x1="204" y1="84" x2="210" y2="78" />
         </g>
       </g>
-      <line x1="200" y1="100" x2="200" y2="150" />
-      <line id="armL" x1="200" y1="120" x2="170" y2="140" />
-      <line id="armR" x1="200" y1="120" x2="230" y2="140" />
-      <line id="legL" x1="200" y1="150" x2="180" y2="190" />
-      <line id="legR" x1="200" y1="150" x2="220" y2="190" />
+      <g id="torso" v-if="step > 5">
+        <line id="body" x1="200" y1="100" x2="200" y2="150" />
+        <line id="armL" x1="200" y1="120" x2="170" y2="140" />
+        <line id="armR" x1="200" y1="120" x2="230" y2="140" />
+      </g>
+      <g id="legs" v-if="step > 6">
+        <line id="legL" x1="200" y1="150" x2="180" y2="190" />
+        <line id="legR" x1="200" y1="150" x2="220" y2="190" />
+      </g>
     </g>
-    <line x1="10" y1="250" x2="150" y2="250" />
-    <line id="door1" x1="150" y1="250" x2="200" y2="250" />
-    <line id="door2" x1="200" y1="250" x2="250" y2="250" />
-    <line x1="100" y1="250" x2="100" y2="20" />
-    <line x1="100" y1="20" x2="200" y2="20" />
-    <line id="rope" x1="200" y1="20" x2="200" y2="60" />
   </svg>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 
-export default defineComponent({});
+export default defineComponent({
+  props: {
+    step: {
+      type: Number,
+      default: 0
+    }
+  }
+});
 </script>
 
 <style lang="stylus" scoped>
@@ -49,7 +59,4 @@ svg
 line
   stroke black
   stroke-width 4
-
-.hide
-  visibility hidden
 </style>
