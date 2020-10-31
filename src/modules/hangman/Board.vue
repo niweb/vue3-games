@@ -35,7 +35,7 @@ export default defineComponent({
     const { word, loading } = useRandomWord();
     const chosenLetters = ref<string[]>([]);
 
-    const announceGameEnd = won => {
+    const announceGameEnd = (won: boolean) => {
       emit("done", { won, word: word.value.reduce((acc, curr) => acc + curr) });
     };
 
