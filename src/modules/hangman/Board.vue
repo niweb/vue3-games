@@ -54,7 +54,6 @@ export default defineComponent({
       return chosenLetters.value.filter(v => !word.value.includes(v));
     });
     watchDeep(wrongGuesses, () => {
-      console.log("wrongGuesses", wrongGuesses.value);
       if (wrongGuesses.value.length > 7) {
         announceGameEnd(false);
       }

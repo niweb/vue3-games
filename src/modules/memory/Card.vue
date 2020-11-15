@@ -1,9 +1,9 @@
 <template>
-  <button @click="turnCard" :disabled="open || found">
+  <Button @click="turnCard" :disabled="open || found">
     <span v-if="open || found">
       {{ value }}
     </span>
-  </button>
+  </Button>
 </template>
 
 <script lang="ts">

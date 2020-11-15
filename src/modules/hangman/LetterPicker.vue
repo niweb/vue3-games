@@ -1,13 +1,13 @@
 <template>
   <div class="letters">
-    <button
+    <Button
       v-for="letter in letters"
       :key="letter"
       :disabled="disabledLetters.includes(letter)"
       @click="onButtonClick(letter)"
     >
       {{ letter }}
-    </button>
+    </Button>
   </div>
 </template>
 

@@ -3,11 +3,11 @@
     <template v-slot:overlay>
       <div class="overlay-content">
         <slot name="done"></slot>
-        <button @click="newGame">New Game</button>
+        <Button @click="newGame">New Game</Button>
       </div>
     </template>
     <slot :key="gameId"></slot>
-    <button @click="newGame">New Game</button>
+    <Button @click="newGame">New Game</Button>
   </Overlay>
 </template>
 
